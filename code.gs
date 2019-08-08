@@ -15,7 +15,7 @@ function AutoConfirmation(e) {
       surName = e.namedValues["Nom de famille"].toString();
 
       //Object
-      subject = "Confirmation d'inscription - cours info étus";
+      subject = "Confirmation d'inscription - cours info étus [Ticket#10318643]";
 
       //Signature
       signature =
@@ -28,7 +28,7 @@ function AutoConfirmation(e) {
       var ss, columns;
       ss = SpreadsheetApp.getActiveSheet();
       columns = ss.getRange(1, 1, 1, ss.getLastColumn()).getValues()[0];
-      listing = "";
+      listing = " ";
       for ( var keys in columns ) {
           var key = columns[keys];
           if ( e.namedValues[key] && e.namedValues[key] != "" && (key == "Cours Unil" || key == "Cours Systèmes d'exploitation" || key == "Cours bureautique" || key == "Cours spécialistes") )
@@ -54,8 +54,14 @@ function AutoConfirmation(e) {
       message = body + "<br>" + signature;
 
       //Send Email
-      var cosmetics = {name: ourName, htmlBody: message};
-      GmailApp.sendEmail(theirEmail, subject, message, cosmetics );
+      MailApp.sendEmail({
+        to: theirEmail,
+        replyTo: "helpdesk@unil.ch",
+        name: ourName,
+        subject: subject,
+        body: message,
+        htmlBody: message
+      });
 
     } catch (e) {
         Logger.log(e.toString());
